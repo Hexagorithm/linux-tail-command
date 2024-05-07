@@ -5,12 +5,14 @@
 #define MAX_NUMBER_LINES 100
 #define MAX_LINE_LENGTH 200
 #define MAX_STACK_SIZE MAX_LINE_LENGTH * MAX_NUMBER_LINES
+#define DEFAULT_NLINES 10
 
 char stack[MAX_NUMBER_LINES * MAX_LINE_LENGTH];
 char* stackptr = stack; /* shows the next free space */
 char* lines[MAX_NUMBER_LINES];
 int linesptr = 0; /* shows the next free space to allocate string */
 bool isnlines = false;
+int nlines = 0;
 
 char* allocate_size(size_t size);
 void print_help(void);
@@ -56,8 +58,20 @@ int main(int argc, char* argv[])
 
 		}
 	}
+	if (isnlines == false) 
+	{
+		nlines = 10;
+	}
+	else
+	{
+		printf("Specifying lines to output is not implemented yet, check back later.\n");
+		return 0;
+	}
 	alloc_lines();
-	print_lines();
+	for (int i = nlines; i > 0; --i)
+	{
+		printf("%s\n",lines[linesptr-i]);
+	}
 
 	return 0;
 }

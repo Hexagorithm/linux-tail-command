@@ -16,7 +16,8 @@ char* allocate_size(size_t size);
 void print_help(void);
 void load_sequence(char* dst, char* src, size_t size );
 int free_alloc_pointer(char* pointer);
-int readline(void);
+int readline(char buffer[]);
+void alloc_lines(void);
 
 int main(int argc, char* argv[])
 {
@@ -54,10 +55,10 @@ int main(int argc, char* argv[])
 
 		}
 	}
-	printf("Read %d bytes.\n",readline());
-	printf("Line read: \"%s\"\n",lines[0]);
-	printf("Another read %d bytes.\n",readline());
-	printf("Line read: \"%s\"\n",lines[1]);
+	alloc_lines();
+	printf("1.%s\n",lines[0]);
+	printf("2.%s\n",lines[1]);
+
 	return 0;
 }
 
@@ -109,9 +110,26 @@ int free_alloc_pointer(char* pointer)
 	return 0;
 }
 
-int readline(void)
+void alloc_lines(void)
 {
 	char buffer[MAX_LINE_LENGTH];
+	int length; 
+	while (1)
+	{
+		length = readline(buffer);
+		if (length == 0) /* Phantom line, EOF */
+		{
+			break;
+		}
+		char* pointer = allocate_size(length+1);
+		load_sequence(pointer, buffer, length);
+		lines[linesptr++] = pointer;
+	}
+	return;
+}
+
+int readline(char buffer[])
+{
 	int c;
 	int i = 0;
 	while ((c=getchar()) != EOF && c != '\n' && i < MAX_LINE_LENGTH -1)
@@ -123,8 +141,5 @@ int readline(void)
 		while ((c = getchar()) != '\n' &&  c != EOF ); /* pass through the line, so the next one is in the chamber when readline invoked again*/
 	}
 	buffer[i] = '\0';
-	char* pointer = allocate_size(strlen(buffer) +1);
-	load_sequence(pointer, buffer, strlen(buffer));
-	lines[linesptr++] = pointer;
-	return i;
+	return i; /* i is length (without null byte)*/
 }

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h> /* strlen*/
 #include <stdbool.h> /* bools */
+#include <stdlib.h> /* atoi*/
 
 #define MAX_NUMBER_LINES 100
 #define MAX_LINE_LENGTH 200
@@ -25,7 +26,8 @@ void print_lines(void);
 int main(int argc, char* argv[])
 {
 	char* argument;
-	for (int _ = 1; _ < argc; ++_)
+	int parameter;
+	for (int current_arg_i = 1; current_arg_i < argc; ++current_arg_i)
 	{
 		argument = *(++argv);
 		if (argument[0] != '-') continue; /* Argument is NOT an option*/
@@ -42,6 +44,12 @@ int main(int argc, char* argv[])
 					printf("Invalid argument detected: \"%s\".\n",argument);
 					return 1;
 				}
+				else if (current_arg_i == argc - 1) /* Current argument is last, no parameter given*/
+				{
+					printf("-n: no parameter given.\n");
+					return 1;
+				}
+				nlines = atoi(*(argv+1));
 				isnlines = true;
 				break;
 			case 'h':
@@ -58,15 +66,7 @@ int main(int argc, char* argv[])
 
 		}
 	}
-	if (isnlines == false) 
-	{
-		nlines = 10;
-	}
-	else
-	{
-		printf("Specifying lines to output is not implemented yet, check back later.\n");
-		return 0;
-	}
+	if (isnlines == false) nlines = 10;
 	alloc_lines();
 	for (int i = nlines; i > 0; --i)
 	{

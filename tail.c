@@ -8,12 +8,15 @@
 
 char stack[MAX_NUMBER_LINES * MAX_LINE_LENGTH];
 char* stackptr = stack; /* shows the next free space */
+char* lines[MAX_NUMBER_LINES];
+int linesptr = 0;
 bool isnlines = false;
 
 char* allocate_size(size_t size);
 void print_help(void);
 void load_sequence(char* dst, char* src, size_t size );
 int free_alloc_pointer(char* pointer);
+int readline(void);
 
 int main(int argc, char* argv[])
 {
@@ -51,26 +54,10 @@ int main(int argc, char* argv[])
 
 		}
 	}
-	printf("Beginning stack position: %p\n",stackptr);
-	char string1[] = "Hello";
-	char* pointer1 = allocate_size(strlen(string1) +1);
-	char string2[] = "There";
-	char* pointer2 = allocate_size(strlen(string2) +1);
-	load_sequence(pointer1, string1, strlen(string1));
-	load_sequence(pointer2, string2, strlen(string2));
-
-	printf("Allocated string1: \"%s\"\n", pointer1);
-	printf("Allocated string2: \"%s\"\n", pointer2);
-	if (free_alloc_pointer(pointer2) == -1)
-	{
-		printf("Allocated bytes failed to free.\n");
-	}
-	if (free_alloc_pointer(pointer1) == -2)
-	{
-		printf("Allocated bytes failed to free.\n");
-		printf("(pointer already freed!)\n");
-	}
-	printf("End stack position: %p\n",stackptr);
+	printf("Read %d bytes.\n",readline());
+	printf("Line read: \"%s\"\n",lines[0]);
+	printf("Another read %d bytes.\n",readline());
+	printf("Line read: \"%s\"\n",lines[1]);
 	return 0;
 }
 
@@ -97,6 +84,7 @@ char* allocate_size(size_t size)
 	stackptr += size;
 	return pointer;
 }
+
 void load_sequence(char* dst, char* src, size_t size )
 {
 	/* Assume dst can hold src */
@@ -112,10 +100,31 @@ void load_sequence(char* dst, char* src, size_t size )
 	dst[i] = '\0';
 	return;
 }
+
 int free_alloc_pointer(char* pointer)
 {
 	if (!( stack <= pointer && pointer <= stack + MAX_STACK_SIZE)) return -1; /* pointer not on stack*/
 	else if (stackptr < pointer) return -2; /* pointer already freed! */
 	stackptr = pointer;
 	return 0;
+}
+
+int readline(void)
+{
+	char buffer[MAX_LINE_LENGTH];
+	int c;
+	int i = 0;
+	while ((c=getchar()) != EOF && c != '\n' && i < MAX_LINE_LENGTH -1)
+	{
+		buffer[i++] = c;
+	}
+	if (i == MAX_LINE_LENGTH - 1 && c != '\n' && c != EOF) /* line too long*/
+	{
+		while ((c = getchar()) != '\n' &&  c != EOF ); /* pass through the line, so the next one is in the chamber when readline invoked again*/
+	}
+	buffer[i] = '\0';
+	char* pointer = allocate_size(strlen(buffer) +1);
+	load_sequence(pointer, buffer, strlen(buffer));
+	lines[linesptr++] = pointer;
+	return i;
 }

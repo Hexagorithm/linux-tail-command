@@ -157,15 +157,35 @@ void alloc_lines(void)
 	while (1)
 	{
 		length = readline(buffer);
-		if (length == 0) /* Phantom line, EOF */
+		if (buffer[0] == EOF) /* Phantom line, EOF */
 		{
 			break;
 		}
+		int i;
+		for (i = 0; buffer[i] != '\n'; ++i);
+		buffer[i] = '\0';
 		char* pointer = allocate_size(length+1);
 		load_sequence(pointer, buffer, length);
 		lines[linesptr++] = pointer;
 	}
 	return;
+}
+
+
+int readline(char buffer[])
+{
+	int c;
+	int i = 0;
+	while (i < MAX_LINE_LENGTH -1)
+	{
+		buffer[i++] = (c=getchar());
+		if (c == EOF || c == '\n') break;
+	}
+	if (i == MAX_LINE_LENGTH - 1 && c != '\n' && c != EOF) /* line too long*/
+	{
+		while ((c = getchar()) != '\n' &&  c != EOF ); /* pass through the line, so the next one is in the chamber when readline invoked again*/
+	}
+	return i; /* i is length (without null byte)*/
 }
 
 void print_all_lines(void)
@@ -185,20 +205,4 @@ void print_lines(int count)
 		printf("%s\n",lines[linesptr-i]);
 	}
 	return;
-}
-
-int readline(char buffer[])
-{
-	int c;
-	int i = 0;
-	while ((c=getchar()) != EOF && c != '\n' && i < MAX_LINE_LENGTH -1)
-	{
-		buffer[i++] = c;
-	}
-	if (i == MAX_LINE_LENGTH - 1 && c != '\n' && c != EOF) /* line too long*/
-	{
-		while ((c = getchar()) != '\n' &&  c != EOF ); /* pass through the line, so the next one is in the chamber when readline invoked again*/
-	}
-	buffer[i] = '\0';
-	return i; /* i is length (without null byte)*/
 }

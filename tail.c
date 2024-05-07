@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h> /* strlen*/
+#include <stdbool.h> /* bools */
 /* Options: */
 /*
  * -n <uint> 
@@ -7,6 +8,8 @@
  *  nothing at all, default 10 lines
 */
 void print_help(void);
+bool isnlines = false;
+
 int main(int argc, char* argv[])
 {
 	char* argument;
@@ -29,7 +32,7 @@ int main(int argc, char* argv[])
 						printf("Invalid argument detected: \"%s\".\n",argument);
 						return 1;
 					}
-					printf("-n option detected.\n");
+					isnlines = true;
 					break;
 				case 'h':
 					if (strlen(argument) != 2)
@@ -47,6 +50,7 @@ int main(int argc, char* argv[])
 		}
 
 	}
+	printf("Isnlines: %d\n",isnlines);
 	return 0;
 }
 

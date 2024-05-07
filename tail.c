@@ -19,6 +19,7 @@ char* allocate_size(size_t size);
 void print_help(void);
 void load_sequence(char* dst, char* src, size_t size );
 int free_alloc_pointer(char* pointer);
+void free_alloc_pointers(void);
 int readline(char buffer[]);
 void alloc_lines(void);
 void print_lines(void);
@@ -67,11 +68,15 @@ int main(int argc, char* argv[])
 		}
 	}
 	if (isnlines == false) nlines = 10;
+	printf("(1)Stack Pointer:%p\n",stackptr);
 	alloc_lines();
+	printf("(2)Stack Pointer:%p\n",stackptr);
 	for (int i = nlines; i > 0; --i)
 	{
 		printf("%s\n",lines[linesptr-i]);
 	}
+	free_alloc_pointers();
+	printf("(3)Stack Pointer:%p\n",stackptr);
 
 	return 0;
 }
@@ -114,6 +119,14 @@ void load_sequence(char* dst, char* src, size_t size )
 	}
 	dst[i] = '\0';
 	return;
+}
+
+void free_alloc_pointers(void)
+{
+	for (int i = linesptr-1; i >= 0; --i)
+	{
+		free_alloc_pointer(lines[i]);
+	}
 }
 
 int free_alloc_pointer(char* pointer)

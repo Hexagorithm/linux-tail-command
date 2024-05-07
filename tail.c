@@ -7,12 +7,14 @@
 #define MAX_LINE_LENGTH 200
 #define MAX_STACK_SIZE MAX_LINE_LENGTH * MAX_NUMBER_LINES
 #define DEFAULT_NLINES 10
+#define VERBOSE if (isverbose)
 
 char stack[MAX_NUMBER_LINES * MAX_LINE_LENGTH];
 char* stackptr = stack; /* shows the next free space */
 char* lines[MAX_NUMBER_LINES];
 int linesptr = 0; /* shows the next free space to allocate string */
 bool isnlines = false;
+bool isverbose = false;
 int nlines = 0;
 
 char* allocate_size(size_t size);
@@ -53,6 +55,14 @@ int main(int argc, char* argv[])
 				nlines = atoi(*(argv+1));
 				isnlines = true;
 				break;
+			case 'v':
+				if (strlen(argument) != 2)
+				{
+					printf("Invalid argument detected: \"%s\".\n",argument);
+					return 1;
+				}
+				isverbose = true;
+				break;
 			case 'h':
 				if (strlen(argument) != 2)
 				{
@@ -68,15 +78,19 @@ int main(int argc, char* argv[])
 		}
 	}
 	if (isnlines == false) nlines = 10;
-	printf("(1)Stack Pointer:%p\n",stackptr);
+	VERBOSE printf("%d lines selected for output.\n\n\n", nlines);
+	
 	alloc_lines();
-	printf("(2)Stack Pointer:%p\n",stackptr);
+	VERBOSE printf("\tLines read from file:\n");
+	VERBOSE print_lines();
+	VERBOSE printf("\n\n\n");
+	VERBOSE printf("\tLines selected from file:\n");
 	for (int i = nlines; i > 0; --i)
 	{
 		printf("%s\n",lines[linesptr-i]);
 	}
+	VERBOSE printf("Freeing pointers.\n");
 	free_alloc_pointers();
-	printf("(3)Stack Pointer:%p\n",stackptr);
 
 	return 0;
 }

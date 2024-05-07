@@ -13,6 +13,7 @@ bool isnlines = false;
 char* allocate_size(size_t size);
 void print_help(void);
 void load_sequence(char* dst, char* src, size_t size );
+int free_alloc_pointer(char* pointer);
 
 int main(int argc, char* argv[])
 {
@@ -50,7 +51,7 @@ int main(int argc, char* argv[])
 
 		}
 	}
-	printf("Isnlines: %d\n",isnlines);
+	printf("Beginning stack position: %p\n",stackptr);
 	char string1[] = "Hello";
 	char* pointer1 = allocate_size(strlen(string1) +1);
 	char string2[] = "There";
@@ -60,6 +61,16 @@ int main(int argc, char* argv[])
 
 	printf("Allocated string1: \"%s\"\n", pointer1);
 	printf("Allocated string2: \"%s\"\n", pointer2);
+	if (free_alloc_pointer(pointer2) == -1)
+	{
+		printf("Allocated bytes failed to free.\n");
+	}
+	if (free_alloc_pointer(pointer1) == -2)
+	{
+		printf("Allocated bytes failed to free.\n");
+		printf("(pointer already freed!)\n");
+	}
+	printf("End stack position: %p\n",stackptr);
 	return 0;
 }
 
@@ -100,4 +111,11 @@ void load_sequence(char* dst, char* src, size_t size )
 	}
 	dst[i] = '\0';
 	return;
+}
+int free_alloc_pointer(char* pointer)
+{
+	if (!( stack <= pointer && pointer <= stack + MAX_STACK_SIZE)) return -1; /* pointer not on stack*/
+	else if (stackptr < pointer) return -2; /* pointer already freed! */
+	stackptr = pointer;
+	return 0;
 }

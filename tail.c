@@ -12,6 +12,7 @@ bool isnlines = false;
 
 char* allocate_size(size_t size);
 void print_help(void);
+void load_sequence(char* dst, char* src, size_t size );
 
 int main(int argc, char* argv[])
 {
@@ -50,8 +51,15 @@ int main(int argc, char* argv[])
 		}
 	}
 	printf("Isnlines: %d\n",isnlines);
-	char* pointer = allocate_size(1);
-	printf("pointer: %p, stackptr: %p\n",pointer, stackptr);
+	char string1[] = "Hello";
+	char* pointer1 = allocate_size(strlen(string1) +1);
+	char string2[] = "There";
+	char* pointer2 = allocate_size(strlen(string2) +1);
+	load_sequence(pointer1, string1, strlen(string1));
+	load_sequence(pointer2, string2, strlen(string2));
+
+	printf("Allocated string1: \"%s\"\n", pointer1);
+	printf("Allocated string2: \"%s\"\n", pointer2);
 	return 0;
 }
 
@@ -69,6 +77,7 @@ void print_help(void)
 
 char* allocate_size(size_t size)
 {
+	/* NOTE: when allocating string, manually increment size value to accomodate null byte */
 	if (stackptr + size > stack + MAX_STACK_SIZE) /* Allocation failed, stack full*/ 
 	{
 		return NULL;
@@ -76,4 +85,19 @@ char* allocate_size(size_t size)
 	char* pointer = stackptr;
 	stackptr += size;
 	return pointer;
+}
+void load_sequence(char* dst, char* src, size_t size )
+{
+	/* Assume dst can hold src */
+	/* Assume size to not include null byte*/
+	/* allocate null byte by force */
+	/* Allocate size+1 bytes ( +1 = null byte)*/
+	/* This way strlen() can be used without trouble */
+	int i;
+	for (i = 0; i < size && src[i] != '\0'; ++i)
+	{
+		dst[i] = src[i];
+	}
+	dst[i] = '\0';
+	return;
 }

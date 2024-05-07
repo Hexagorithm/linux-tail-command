@@ -1,14 +1,17 @@
 #include <stdio.h>
 #include <string.h> /* strlen*/
 #include <stdbool.h> /* bools */
-/* Options: */
-/*
- * -n <uint> 
- * -h
- *  nothing at all, default 10 lines
-*/
-void print_help(void);
+
+#define MAX_NUMBER_LINES 100
+#define MAX_LINE_LENGTH 200
+#define MAX_STACK_SIZE MAX_LINE_LENGTH * MAX_NUMBER_LINES
+
+char stack[MAX_NUMBER_LINES * MAX_LINE_LENGTH];
+char* stackptr = stack; /* shows the next free space */
 bool isnlines = false;
+
+char* allocate_size(size_t size);
+void print_help(void);
 
 int main(int argc, char* argv[])
 {
@@ -47,6 +50,8 @@ int main(int argc, char* argv[])
 		}
 	}
 	printf("Isnlines: %d\n",isnlines);
+	char* pointer = allocate_size(1);
+	printf("pointer: %p, stackptr: %p\n",pointer, stackptr);
 	return 0;
 }
 
@@ -60,4 +65,15 @@ void print_help(void)
 			"\t-v -> verbose mode (should not use if output used in another program)\n");
 	return;
 
+}
+
+char* allocate_size(size_t size)
+{
+	if (stackptr + size > stack + MAX_STACK_SIZE) /* Allocation failed, stack full*/ 
+	{
+		return NULL;
+	}
+	char* pointer = stackptr;
+	stackptr += size;
+	return pointer;
 }

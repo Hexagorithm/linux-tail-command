@@ -1,11 +1,12 @@
 #include <stdio.h>
-#include <string.h> //strlen
+#include <string.h> /* strlen*/
 /* Options: */
 /*
  * -n <uint> 
  * -h
  *  nothing at all, default 10 lines
 */
+void print_help(void);
 int main(int argc, char* argv[])
 {
 	char* argument;
@@ -36,8 +37,8 @@ int main(int argc, char* argv[])
 						printf("Invalid argument detected: \"%s\".\n",argument);
 						return 1;
 					}
-					printf("-h option detected.\n");
-					break;
+					print_help();
+					return 0;
 				default:
 					printf("Invalid argument detected: \"%s\".\n",argument);
 					return 1;
@@ -47,4 +48,16 @@ int main(int argc, char* argv[])
 
 	}
 	return 0;
+}
+
+void print_help(void)
+{
+	printf(
+			"tail: get n(10) last lines of input.\n"
+			"Options:\n"
+			"\t-h -> show help\n"
+			"\t-n -> specify number of lines to output (default = 10)\n"
+			"\t-v -> verbose mode (should not use if output used in another program)\n");
+	return;
+
 }

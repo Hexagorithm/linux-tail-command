@@ -16,39 +16,35 @@ int main(int argc, char* argv[])
 	for (int _ = 1; _ < argc; ++_)
 	{
 		argument = *(++argv);
-		if (argument[0] = '-') /* Argument is an option*/
+		if (argument[0] != '-') continue; /* Argument is NOT an option*/
+		if (strlen(argument) == 1)
 		{
-			if (strlen(argument) == 1)
-			{
-				printf("Invalid argument: \"-\"\n");
-				return 1;
-
-			}
-			switch (argument[1])
-			{
-				case 'n':
-					if (strlen(argument) != 2)
-					{
-						printf("Invalid argument detected: \"%s\".\n",argument);
-						return 1;
-					}
-					isnlines = true;
-					break;
-				case 'h':
-					if (strlen(argument) != 2)
-					{
-						printf("Invalid argument detected: \"%s\".\n",argument);
-						return 1;
-					}
-					print_help();
-					return 0;
-				default:
+			printf("Invalid argument: \"-\"\n");
+			return 1;
+		}
+		switch (argument[1])
+		{
+			case 'n':
+				if (strlen(argument) != 2)
+				{
 					printf("Invalid argument detected: \"%s\".\n",argument);
 					return 1;
+				}
+				isnlines = true;
+				break;
+			case 'h':
+				if (strlen(argument) != 2)
+				{
+					printf("Invalid argument detected: \"%s\".\n",argument);
+					return 1;
+				}
+				print_help();
+				return 0;
+			default:
+				printf("Invalid argument detected: \"%s\".\n",argument);
+				return 1;
 
-			}
 		}
-
 	}
 	printf("Isnlines: %d\n",isnlines);
 	return 0;

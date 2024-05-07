@@ -1,0 +1,4 @@
+the program wants to be inputted the data, rather than opening a file on its own. On linux, should you want to test this program out, do the following:
+./tail < file.txt
+./tial -n 5 < file.txt
+

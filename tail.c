@@ -9,7 +9,7 @@
 char stack[MAX_NUMBER_LINES * MAX_LINE_LENGTH];
 char* stackptr = stack; /* shows the next free space */
 char* lines[MAX_NUMBER_LINES];
-int linesptr = 0;
+int linesptr = 0; /* shows the next free space to allocate string */
 bool isnlines = false;
 
 char* allocate_size(size_t size);
@@ -18,6 +18,7 @@ void load_sequence(char* dst, char* src, size_t size );
 int free_alloc_pointer(char* pointer);
 int readline(char buffer[]);
 void alloc_lines(void);
+void print_lines(void);
 
 int main(int argc, char* argv[])
 {
@@ -56,8 +57,7 @@ int main(int argc, char* argv[])
 		}
 	}
 	alloc_lines();
-	printf("1.%s\n",lines[0]);
-	printf("2.%s\n",lines[1]);
+	print_lines();
 
 	return 0;
 }
@@ -126,6 +126,16 @@ void alloc_lines(void)
 		lines[linesptr++] = pointer;
 	}
 	return;
+}
+
+void print_lines(void)
+{
+	for (int i = 0; i < linesptr; ++i)
+	{
+		printf("%d.\"%s\"\n",i,lines[i]);
+	}
+	return;
+
 }
 
 int readline(char buffer[])

@@ -24,7 +24,8 @@ int free_alloc_pointer(char* pointer);
 void free_alloc_pointers(void);
 int readline(char buffer[]);
 void alloc_lines(void);
-void print_lines(void);
+void print_all_lines(void);
+void print_lines(int count);
 
 int main(int argc, char* argv[])
 {
@@ -78,17 +79,15 @@ int main(int argc, char* argv[])
 		}
 	}
 	if (isnlines == false) nlines = 10;
+	alloc_lines();
+	nlines = (nlines <= linesptr) ? nlines : linesptr;
 	VERBOSE printf("%d lines selected for output.\n\n\n", nlines);
 	
-	alloc_lines();
 	VERBOSE printf("\tLines read from file:\n");
-	VERBOSE print_lines();
+	VERBOSE print_all_lines();
 	VERBOSE printf("\n\n\n");
 	VERBOSE printf("\tLines selected from file:\n");
-	for (int i = nlines; i > 0; --i)
-	{
-		printf("%s\n",lines[linesptr-i]);
-	}
+	print_lines(nlines);
 	VERBOSE printf("Freeing pointers.\n");
 	free_alloc_pointers();
 
@@ -169,7 +168,7 @@ void alloc_lines(void)
 	return;
 }
 
-void print_lines(void)
+void print_all_lines(void)
 {
 	for (int i = 0; i < linesptr; ++i)
 	{
@@ -177,6 +176,15 @@ void print_lines(void)
 	}
 	return;
 
+}
+
+void print_lines(int count)
+{
+	for (int i = count; i > 0; --i)
+	{
+		printf("%s\n",lines[linesptr-i]);
+	}
+	return;
 }
 
 int readline(char buffer[])
